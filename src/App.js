@@ -19,18 +19,22 @@ class App extends Component {
     e.preventDefault();
     const api_call = await fetch(
       `https://cors-anywhere.herokuapp.com/http://food2fork.com/api/search?key=${API_KEY}&q=${recipeName}&count=${
-        this.state.count
+      this.state.count
       }`
     );
     const data = await api_call.json();
     console.log(data);
-    this.setState({ recipes: data.recipes });
+    this.setState({
+      recipes: data.recipes
+    });
   };
 
   componentDidMount = () => {
     const json = localStorage.getItem("recipes");
     const recipes = JSON.parse(json);
-    this.setState({ recipes });
+    this.setState({
+      recipes
+    });
   };
 
   componentDidUpdate = () => {
@@ -39,8 +43,9 @@ class App extends Component {
   };
 
   handleChange = e => {
-    const { name, value } = e.target;
-    this.setState({ count: value });
+    this.setState({
+      count: e.target.value
+    });
   };
 
   render() {
@@ -49,13 +54,23 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">
-            <Link to="/" style={{ textDecoration: "none" }}>
-              Recipe Search
-            </Link>
-          </h1>
-        </header>
-        <Form getRecipe={this.getRecipe} />
-        <div className="radioButtons" style={{ marginBottom: "1rem" }}>
+            <Link
+              to="/"
+              style={{
+                textDecoration: "none"
+              }}
+            >
+              Recipe Search{" "}
+            </Link>{" "}
+          </h1>{" "}
+        </header>{" "}
+        <Form getRecipe={this.getRecipe} />{" "}
+        <div
+          className="radioButtons"
+          style={{
+            marginBottom: "1rem"
+          }}
+        >
           <input
             type="radio"
             value="5"
@@ -63,32 +78,32 @@ class App extends Component {
             name="count"
             onChange={this.handleChange}
           />
-          5
+          5{" "}
           <input
             type="radio"
             value="10"
             name="count"
             onChange={this.handleChange}
           />
-          10
+          10{" "}
           <input
             type="radio"
             value="15"
             name="count"
             onChange={this.handleChange}
           />
-          20
+          20{" "}
           <input
             type="radio"
             value="15"
             name="count"
             onChange={this.handleChange}
           />
-          30
-        </div>
+          30{" "}
+        </div>{" "}
         {localStorage.getItem("recipes") && this.state.recipes.length !== 0 && (
           <Recipes recipes={this.state.recipes} count={this.state.count} />
-        )}
+        )}{" "}
       </div>
     );
   }
