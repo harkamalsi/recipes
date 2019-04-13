@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Recipes = props => (
   <div className="container">
     <div className="row">
-      {props.recipes.slice(0, props.count).map(recipe => {
+      {props.recipes !== null && props.recipes.slice(0, props.count).map(recipe => {
         return (
           <div
             key={recipe.title}

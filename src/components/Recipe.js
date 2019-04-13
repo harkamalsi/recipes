@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Loading from './loadingScreen/Loading';
+import Loading from './loader/Loading';
 
 
 const API_KEY = "08ee1b4613c342c86f1bf5d398502cff";

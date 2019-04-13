@@ -35,7 +35,11 @@ body {
   .App-title {
     font-size: 1.5em;
   }
-  
+   
+  .container {
+    height: auto;
+  }
+
   .recipe_buttons {
     border: solid 2px #e74c3c;
     background: transparent;
@@ -47,6 +51,11 @@ body {
     font-weight: 500;
     margin-left: 0.7rem;
   }
+
+  .recipes {
+    height: 100vh;
+    scroll-snap-align: start none;
+  }
   
   .recipes__box {
     background: #fff;
@@ -54,7 +63,7 @@ body {
     border-radius: 5px;
     box-shadow: -1px 2px 34px -13px rgba(0,0,0,0.75);
     text-align: left;
-    overflow: hidden;
+    
   }
   
   .recipe__text {
@@ -107,6 +116,18 @@ body {
   input[type="text"] { 
     outline: none;
   }
+
+ label {
+  position: absolute;
+  top: 123.3%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+ }
+ 
+ #circle-up {
+  position: relative;
+  bottom: 0;
+ }
   
   input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px #f3f3f3 inset;
