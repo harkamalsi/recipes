@@ -2,7 +2,15 @@ import React, { Component } from "react";
 import "./App.css";
 import Form from "./components/Form";
 import Recipes from "./components/Recipes";
-import { Link } from "react-router-dom";
+import LoadingScreen from "./components/svg/landingLoading";
+import {
+  Link as LinkScroll,
+  animateScroll as scroll,
+  Element
+} from "react-scroll";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowAltCircleUp } from "@fortawesome/free-solid-svg-icons";
+import { relative } from "path";
 
 const API_KEY = "08ee1b4613c342c86f1bf5d398502cff";
 
@@ -19,7 +27,7 @@ class App extends Component {
     e.preventDefault();
     const api_call = await fetch(
       `https://cors-anywhere.herokuapp.com/http://food2fork.com/api/search?key=${API_KEY}&q=${recipeName}&count=${
-      this.state.count
+        this.state.count
       }`
     );
     const data = await api_call.json();
@@ -29,7 +37,7 @@ class App extends Component {
     });
   };
 
-  componentDidMount = () => {
+  componentDidMount = e => {
     const json = localStorage.getItem("recipes");
     const recipes = JSON.parse(json);
     this.setState({
@@ -42,71 +50,140 @@ class App extends Component {
     localStorage.setItem("recipes", recipes);
   };
 
+  componentWillUnmount = e => {
+    e.scrollEvent.remove("begin");
+    e.scrollEvent.remove("end");
+  };
+
   handleChange = e => {
     this.setState({
       count: e.target.value
     });
   };
 
+  scrollToRecipes = () => {
+    scroll.scrollTo();
+  };
+
+  scrollToTop() {
+    scroll.scrollToTop();
+  }
+
+  scrollTo() {
+    scroll.scrollTo("scroll-to-element", {
+      duration: 1100,
+      delay: 0,
+      smooth: "easeInOutQuart"
+    });
+  }
+
+  scrollToWithContainer = e => {
+    let goToContainer = new Promise((resolve, reject) => {
+      e.scrollEvent.register("end", () => {
+        resolve();
+        e.scrollEvent.remove("end");
+      });
+
+      scroll.scrollTo("scroll-container", {
+        duration: 800,
+        delay: 0,
+        smooth: "easeInOutQuart"
+      });
+    });
+
+    goToContainer.then(() =>
+      scroll.scrollTo("scroll-container-second-element", {
+        duration: 800,
+        delay: 0,
+        smooth: "easeInOutQuart",
+        containerId: "scroll-container"
+      })
+    );
+  };
+
   render() {
-    console.log(this.state.recipes);
     return (
       <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">
-            <Link
-              to="/"
-              style={{
-                textDecoration: "none"
-              }}
+        {
+          <div align="center">
+            {<LoadingScreen id="landing" />}
+            <LinkScroll
+              activeClass="active"
+              to="recipes"
+              spy={true}
+              smooth={true}
+              duration={1100}
             >
-              Recipe Search{" "}
-            </Link>{" "}
-          </h1>{" "}
-        </header>{" "}
-        <Form getRecipe={this.getRecipe} />{" "}
-        <div
-          className="radioButtons"
-          style={{
-            marginBottom: "1rem"
-          }}
-        >
-          <input
-            type="radio"
-            value="5"
-            defaultChecked
-            name="count"
-            onChange={this.handleChange}
-          />
-          5{" "}
-          <input
-            type="radio"
-            value="10"
-            name="count"
-            onChange={this.handleChange}
-          />
-          10{" "}
-          <input
-            type="radio"
-            value="15"
-            name="count"
-            onChange={this.handleChange}
-          />
-          20{" "}
-          <input
-            type="radio"
-            value="15"
-            name="count"
-            onChange={this.handleChange}
-          />
-          30{" "}
-        </div>{" "}
-        {localStorage.getItem("recipes") && this.state.recipes.length !== 0 && (
-          <Recipes recipes={this.state.recipes} count={this.state.count} />
-        )}{" "}
+              <a className="buttonExplore" style={{ textDecoration: "none" }}>
+                Click here to explore
+              </a>
+            </LinkScroll>
+          </div>
+        }
+        <Element name="recipes">
+          <header className="App-header">
+            <h1 className="App-title">
+              <a style={{ cursor: "pointer" }} onClick={this.scrollToTop}>
+                Recipe Search
+              </a>
+            </h1>{" "}
+          </header>{" "}
+          <Form getRecipe={this.getRecipe} />{" "}
+          <div
+            className="radioButtons"
+            style={{
+              marginBottom: "1rem"
+            }}
+          >
+            <input
+              type="radio"
+              value="5"
+              defaultChecked
+              name="count"
+              onChange={this.handleChange}
+            />
+            5{" "}
+            <input
+              type="radio"
+              value="10"
+              name="count"
+              onChange={this.handleChange}
+            />
+            10{" "}
+            <input
+              type="radio"
+              value="20"
+              name="count"
+              onChange={this.handleChange}
+            />
+            20{" "}
+            <input
+              type="radio"
+              value="30"
+              name="count"
+              onChange={this.handleChange}
+            />
+            30{" "}
+          </div>{" "}
+          {<Recipes recipes={this.state.recipes} count={this.state.count} />}{" "}
+          <LinkScroll
+            activeClass="active"
+            to="recipes"
+            spy={true}
+            smooth={true}
+            duration={1100}
+          >
+            <FontAwesomeIcon
+              id="circle-up"
+              icon={faArrowAltCircleUp}
+              size="3x"
+              style={{marginBottom: "1rem", cursor: "pointer"}}
+            />
+          </LinkScroll>
+        </Element>
       </div>
     );
   }
 }
-
+//localStorage.getItem("recipes")
 export default App;
