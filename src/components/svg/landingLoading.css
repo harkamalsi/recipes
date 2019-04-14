@@ -1,7 +1,7 @@
 .svgLoader {
   width: 100%;
   height: 100vh;
-  background-color: #a13a2f;
+  background-color: tomato;
   box-sizing: border-box;
   /*#9835a8*/
 }
@@ -43,7 +43,7 @@
   
   .buttonExplore:hover {
   color: #ffffff !important;
-  background: #bd4336;
+  background: rgb(218, 83, 59);
   border-color: #722a22 !important;
   transition: all 0.4s ease-in-out;
   font-weight: 600;

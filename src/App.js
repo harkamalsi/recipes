@@ -37,6 +37,11 @@ class App extends Component {
     });
   };
 
+  clearAll = () => {
+    localStorage.clear();
+    this.setState({recipes: []});
+  }
+
   componentDidMount = e => {
     const json = localStorage.getItem("recipes");
     const recipes = JSON.parse(json);
@@ -48,11 +53,6 @@ class App extends Component {
   componentDidUpdate = () => {
     const recipes = JSON.stringify(this.state.recipes);
     localStorage.setItem("recipes", recipes);
-  };
-
-  componentWillUnmount = e => {
-    e.scrollEvent.remove("begin");
-    e.scrollEvent.remove("end");
   };
 
   handleChange = e => {
@@ -122,11 +122,22 @@ class App extends Component {
         }
         <Element name="recipes">
           <header className="App-header">
-            <h1 className="App-title">
-              <a style={{ cursor: "pointer" }} onClick={this.scrollToTop}>
-                Recipe Search
-              </a>
-            </h1>{" "}
+            <div className="grid-2">
+              <div>
+                <h1 className="App-title">
+                  <a style={{ cursor: "pointer" }} onClick={this.scrollToTop}>
+                    Favorite Recipes
+                  </a>
+                </h1>{" "}
+              </div>
+              <div>
+                <h1 className="App-title">
+                  <a style={{ cursor: "pointer" }} onClick={this.clearAll}>
+                    Reset Everything
+                  </a>
+                </h1>{" "}
+              </div>
+            </div>
           </header>{" "}
           <Form getRecipe={this.getRecipe} />{" "}
           <div
@@ -177,7 +188,7 @@ class App extends Component {
               id="circle-up"
               icon={faArrowAltCircleUp}
               size="3x"
-              style={{marginBottom: "1rem", cursor: "pointer"}}
+              style={{ marginBottom: "1rem", cursor: "pointer" }}
             />
           </LinkScroll>
         </Element>
