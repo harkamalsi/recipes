@@ -6,10 +6,6 @@ import { faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
 class Favorite extends React.Component {
   handleOnClick = recipe => {
     this.props.setFavorite(recipe);
-
-    let index = this.props.allRecipes.indexOf(recipe);
-
-    this.props.setIndex(index);
   };
 
   displayHeart = recipe => {

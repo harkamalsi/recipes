@@ -19,25 +19,42 @@ class Favorites extends React.Component {
     });
   };
 
+  altText = () => {
+    return (
+      <h1 
+        className="center"
+        style={{marginTop: "15rem"}}
+        >Please favorite some recipes.</h1>
+    );
+  };
+
+  header = () => {
+    return (
+      <div>
+        <header className="App-header center">
+          <Link
+            to={{
+              pathname: `/`
+            }}
+            style={{ textDecoration: "none" }}
+          >
+            <h1 className="App-title center">Go Home</h1>
+          </Link>{" "}
+        </header>
+      </div>
+    );
+  };
+
   render() {
     let favorites = this.state.favorites;
 
+    if (favorites.length === 0) {
+      return <div>{this.header()} {this.altText()}</div>;
+    }
+
     return (
       <div>
-        <header className="App-header">
-          <div style={{ margin: "0 auto" }}>
-            <h1 className="App-title">
-              <Link
-                to={{
-                  pathname: `/`
-                }}
-                style={{ textDecoration: "none" }}
-              >
-                Go Home
-              </Link>
-            </h1>{" "}
-          </div>
-        </header>
+        {this.header()}
 
         <div className="container">
           <div className="row">
@@ -79,14 +96,16 @@ class Favorites extends React.Component {
                         View Recipe
                       </Link>
                     </button>
+                    {/*
                     <div className="heart">
-                      <Favorite 
+                      <Favorite
                         allRecipes={this.props.recipes}
                         recipe={recipe}
                         setFavorite={this.props.setFavorite}
                         setIndex={this.props.setIndex}
                       />
                     </div>
+                    */}
                   </div>
                 </div>
               );

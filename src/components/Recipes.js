@@ -51,7 +51,6 @@ const Recipes = (props) => {
                         allRecipes={props.recipes}
                         recipe={recipe}
                         setFavorite={props.setFavorite}
-                        setIndex={props.setIndex}
                       />
                     </div>
                   </div>

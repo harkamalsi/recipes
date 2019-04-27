@@ -47,6 +47,10 @@ button:focus {
   margin-right: 1rem;
 }
 
+.center {
+  text-align: center;
+}
+
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

@@ -20,7 +20,6 @@ class App extends Component {
   state = {
     recipes: [],
     favRecipe: [],
-    index: null,
     count: 5
   };
 
@@ -107,28 +106,23 @@ class App extends Component {
     );
   };
 
-  setFavorite = x => {
+  setFavorite = recipe => {
 
-    let id = x.recipe_id;
+    let id = recipe.recipe_id;
 
     let recipeIndex = this.state.recipes.findIndex(
       recipe => recipe.recipe_id === id
     );
 
     let recipes = this.state.recipes;
-    let recipe = recipes[recipeIndex];
+    let favRecipe = recipes[recipeIndex];
         
-    recipe.favorite = !recipe.favorite;
+    favRecipe.favorite = !favRecipe.favorite;
 
     this.setState({
-      index: recipeIndex,
       recipes,
-      favRecipe: recipe
+      favRecipe
     });
-  };
-
-  setIndex = e => {
-    this.setState({ index: e });
   };
 
   render() {
@@ -166,10 +160,7 @@ class App extends Component {
                         favorites: this.state.recipes,
                         setFavorite: this.setFavorite,
                         recipes: this.state.recipes,
-                        favRecipe: this.state.favRecipe,
-                        index: this.state.index,
-                        setIndex: this.setIndex,
-                        count: this.state.count
+                        favRecipe: this.state.favRecipe
                       }
                     }}
                     style={{ textDecoration: "none" }}
@@ -195,7 +186,8 @@ class App extends Component {
           <div
             className="radioButtons"
             style={{
-              marginBottom: "1rem"
+              marginBottom: "1rem",
+              padding: "1rem"
             }}
           >
             <input
@@ -204,6 +196,9 @@ class App extends Component {
               defaultChecked
               name="count"
               onChange={this.handleChange}
+              style={{
+                padding: "1rem"
+              }}
             />
             5{" "}
             <input
@@ -233,8 +228,6 @@ class App extends Component {
               setFavorite={this.setFavorite}
               recipes={this.state.recipes}
               favRecipe={this.state.favRecipe}
-              index={this.state.index}
-              setIndex={this.setIndex}
               count={this.state.count}
             />
           }{" "}
