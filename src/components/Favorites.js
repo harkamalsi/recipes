@@ -3,13 +3,45 @@ import LazyLoad from "react-lazy-load";
 import { Link } from "react-router-dom";
 import Favorite from "./Favorite";
 
-const Recipes = (props) => {
+class Favorites extends React.Component {
+  state = {
+    favorites: []
+  };
+
+  componentDidMount = () => {
+    const json = localStorage.getItem("recipes");
+    const recipes = JSON.parse(json);
+
+    const favorites = recipes.filter(recipe => recipe.favorite === true);
+
+    this.setState({
+      favorites
+    });
+  };
+
+  render() {
+    let favorites = this.state.favorites;
 
     return (
-      <div className="container">
-        <div className="row">
-          {props.recipes !== null &&
-            props.recipes.slice(0, props.count).map(recipe => {
+      <div>
+        <header className="App-header">
+          <div style={{ margin: "0 auto" }}>
+            <h1 className="App-title">
+              <Link
+                to={{
+                  pathname: `/`
+                }}
+                style={{ textDecoration: "none" }}
+              >
+                Go Home
+              </Link>
+            </h1>{" "}
+          </div>
+        </header>
+
+        <div className="container">
+          <div className="row">
+            {favorites.map(recipe => {
               return (
                 <div
                   key={recipe.recipe_id}
@@ -17,6 +49,7 @@ const Recipes = (props) => {
                   style={{ marginBottom: "2rem" }}
                 >
                   <div className="recipes__box">
+                    {console.log(recipe)}
                     <LazyLoad>
                       <div className="image">
                         <img
@@ -48,19 +81,21 @@ const Recipes = (props) => {
                     </button>
                     <div className="heart">
                       <Favorite 
-                        allRecipes={props.recipes}
+                        allRecipes={this.props.recipes}
                         recipe={recipe}
-                        setFavorite={props.setFavorite}
-                        setIndex={props.setIndex}
+                        setFavorite={this.props.setFavorite}
+                        setIndex={this.props.setIndex}
                       />
                     </div>
                   </div>
                 </div>
               );
             })}
+          </div>
         </div>
       </div>
     );
   }
+}
 
-export default Recipes;
+export default Favorites;

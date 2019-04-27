@@ -10,7 +10,7 @@ import {
 } from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowAltCircleUp } from "@fortawesome/free-solid-svg-icons";
-import { relative } from "path";
+import { Link } from "react-router-dom";
 
 const API_KEY = "08ee1b4613c342c86f1bf5d398502cff";
 
@@ -19,6 +19,8 @@ const API_KEY = "08ee1b4613c342c86f1bf5d398502cff";
 class App extends Component {
   state = {
     recipes: [],
+    favRecipe: [],
+    index: null,
     count: 5
   };
 
@@ -31,16 +33,20 @@ class App extends Component {
       }`
     );
     const data = await api_call.json();
-    console.log(data);
+
+    //Setter inn favorite for hver recipe
+    data.recipes.forEach(x => (x.favorite = false));
+
     this.setState({
       recipes: data.recipes
     });
   };
 
-  clearAll = () => {
+  clearAll = e => {
     localStorage.clear();
-    this.setState({recipes: []});
-  }
+    this.setState({ recipes: [] });
+    e.preventDefault();
+  };
 
   componentDidMount = e => {
     const json = localStorage.getItem("recipes");
@@ -101,6 +107,30 @@ class App extends Component {
     );
   };
 
+  setFavorite = x => {
+
+    let id = x.recipe_id;
+
+    let recipeIndex = this.state.recipes.findIndex(
+      recipe => recipe.recipe_id === id
+    );
+
+    let recipes = this.state.recipes;
+    let recipe = recipes[recipeIndex];
+        
+    recipe.favorite = !recipe.favorite;
+
+    this.setState({
+      index: recipeIndex,
+      recipes,
+      favRecipe: recipe
+    });
+  };
+
+  setIndex = e => {
+    this.setState({ index: e });
+  };
+
   render() {
     return (
       <div className="App">
@@ -114,25 +144,47 @@ class App extends Component {
               smooth={true}
               duration={1100}
             >
-              <a className="buttonExplore" style={{ textDecoration: "none" }}>
+              <a
+                className="buttonExplore"
+                style={{ textDecoration: "none" }}
+                href="."
+              >
                 Click here to explore
               </a>
             </LinkScroll>
           </div>
         }
         <Element name="recipes">
-          <header className="App-header">
+          <header className="App-header" id={'recipes'}>
             <div className="grid-2">
               <div>
                 <h1 className="App-title">
-                  <a style={{ cursor: "pointer" }} onClick={this.scrollToTop}>
+                  <Link
+                    to={{
+                      pathname: `/favorites`,
+                      state: {
+                        favorites: this.state.recipes,
+                        setFavorite: this.setFavorite,
+                        recipes: this.state.recipes,
+                        favRecipe: this.state.favRecipe,
+                        index: this.state.index,
+                        setIndex: this.setIndex,
+                        count: this.state.count
+                      }
+                    }}
+                    style={{ textDecoration: "none" }}
+                  >
                     Favorite Recipes
-                  </a>
+                  </Link>
                 </h1>{" "}
               </div>
               <div>
                 <h1 className="App-title">
-                  <a style={{ cursor: "pointer" }} onClick={this.clearAll}>
+                  <a
+                    style={{ cursor: "pointer" }}
+                    onClick={this.clearAll}
+                    href="."
+                  >
                     Reset Everything
                   </a>
                 </h1>{" "}
@@ -176,7 +228,16 @@ class App extends Component {
             />
             30{" "}
           </div>{" "}
-          {<Recipes recipes={this.state.recipes} count={this.state.count} />}{" "}
+          {
+            <Recipes
+              setFavorite={this.setFavorite}
+              recipes={this.state.recipes}
+              favRecipe={this.state.favRecipe}
+              index={this.state.index}
+              setIndex={this.setIndex}
+              count={this.state.count}
+            />
+          }{" "}
           <LinkScroll
             activeClass="active"
             to="recipes"
