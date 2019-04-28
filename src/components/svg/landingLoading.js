@@ -1,6 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
 import "./landingLoading.css";
-import Recipes from "../Recipes";
 
 const Loading = () => (
   <div className="svgLoader">

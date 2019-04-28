@@ -16,7 +16,6 @@ class Recipe extends React.Component {
     const title = this.props.location.state.recipe;
     const req = await fetch(`https://cors-anywhere.herokuapp.com/http://food2fork.com/api/search?key=${API_KEY}&q=${title}`);
     const res = await req.json();
-    console.log(res);
     this.setState({ activeRecipe: res.recipes[0] });
   }
 
@@ -41,6 +40,9 @@ class Recipe extends React.Component {
               </p>
               <button className="active-recipe__button">
                 <Link to="/">Go Home</Link>
+              </button>
+              <button className="active-recipe__button">
+                <Link to="/favorites">Go to favorites</Link>
               </button>
             </div>            
           }

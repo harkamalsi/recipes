@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import Form from "./components/Form";
 import Recipes from "./components/Recipes";
+import Loading from './components/loader/Loading';
 import LoadingScreen from "./components/svg/landingLoading";
 import {
   Link as LinkScroll,
@@ -10,7 +11,7 @@ import {
 } from "react-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowAltCircleUp } from "@fortawesome/free-solid-svg-icons";
-import { relative } from "path";
+import { Link } from "react-router-dom";
 
 const API_KEY = "08ee1b4613c342c86f1bf5d398502cff";
 
@@ -19,6 +20,8 @@ const API_KEY = "08ee1b4613c342c86f1bf5d398502cff";
 class App extends Component {
   state = {
     recipes: [],
+    favRecipe: [],
+    load: false,
     count: 5
   };
 
@@ -31,10 +34,19 @@ class App extends Component {
       }`
     );
     const data = await api_call.json();
-    console.log(data);
+
+    //Setter inn favorite for hver recipe
+    data.recipes.forEach(x => (x.favorite = false));
+
     this.setState({
       recipes: data.recipes
     });
+  };
+
+  clearAll = e => {
+    localStorage.clear();
+    this.setState({ recipes: [] });
+    e.preventDefault();
   };
 
   componentDidMount = e => {
@@ -48,11 +60,6 @@ class App extends Component {
   componentDidUpdate = () => {
     const recipes = JSON.stringify(this.state.recipes);
     localStorage.setItem("recipes", recipes);
-  };
-
-  componentWillUnmount = e => {
-    e.scrollEvent.remove("begin");
-    e.scrollEvent.remove("end");
   };
 
   handleChange = e => {
@@ -101,6 +108,29 @@ class App extends Component {
     );
   };
 
+  setFavorite = recipe => {
+
+    let id = recipe.recipe_id;
+
+    let recipeIndex = this.state.recipes.findIndex(
+      recipe => recipe.recipe_id === id
+    );
+
+    let recipes = this.state.recipes;
+    let favRecipe = recipes[recipeIndex];
+        
+    favRecipe.favorite = !favRecipe.favorite;
+
+    this.setState({
+      recipes,
+      favRecipe
+    });
+  };
+
+  setLoader = () => {
+    this.setState({load: !this.state.load});
+  }
+
   render() {
     return (
       <div className="App">
@@ -114,25 +144,56 @@ class App extends Component {
               smooth={true}
               duration={1100}
             >
-              <a className="buttonExplore" style={{ textDecoration: "none" }}>
+              <a
+                className="buttonExplore"
+                style={{ textDecoration: "none" }}
+                href="."
+              >
                 Click here to explore
               </a>
             </LinkScroll>
           </div>
         }
         <Element name="recipes">
-          <header className="App-header">
-            <h1 className="App-title">
-              <a style={{ cursor: "pointer" }} onClick={this.scrollToTop}>
-                Recipe Search
-              </a>
-            </h1>{" "}
+          <header className="App-header" id={'recipes'}>
+            <div className="grid-2">
+              <div>
+                <h1 className="App-title">
+                  <Link
+                    to={{
+                      pathname: `/favorites`,
+                      state: {
+                        favorites: this.state.recipes,
+                        setFavorite: this.setFavorite,
+                        recipes: this.state.recipes,
+                        favRecipe: this.state.favRecipe
+                      }
+                    }}
+                    style={{ textDecoration: "none" }}
+                  >
+                    Favorite Recipes
+                  </Link>
+                </h1>{" "}
+              </div>
+              <div>
+                <h1 className="App-title">
+                  <a
+                    style={{ cursor: "pointer" }}
+                    onClick={this.clearAll}
+                    href="."
+                  >
+                    Reset Everything
+                  </a>
+                </h1>{" "}
+              </div>
+            </div>
           </header>{" "}
-          <Form getRecipe={this.getRecipe} />{" "}
+          <Form getRecipe={this.getRecipe} onClick={this.setLoader}/>{" "}
           <div
             className="radioButtons"
             style={{
-              marginBottom: "1rem"
+              marginBottom: "1rem",
+              padding: "1rem"
             }}
           >
             <input
@@ -141,6 +202,9 @@ class App extends Component {
               defaultChecked
               name="count"
               onChange={this.handleChange}
+              style={{
+                padding: "1rem"
+              }}
             />
             5{" "}
             <input
@@ -165,7 +229,15 @@ class App extends Component {
             />
             30{" "}
           </div>{" "}
-          {<Recipes recipes={this.state.recipes} count={this.state.count} />}{" "}
+          { this.state.recipes.length === 0 && this.state.load && <Loading />}
+          {
+            <Recipes
+              setFavorite={this.setFavorite}
+              recipes={this.state.recipes}
+              favRecipe={this.state.favRecipe}
+              count={this.state.count}
+            />
+          }{" "}
           <LinkScroll
             activeClass="active"
             to="recipes"
@@ -177,7 +249,7 @@ class App extends Component {
               id="circle-up"
               icon={faArrowAltCircleUp}
               size="3x"
-              style={{marginBottom: "1rem", cursor: "pointer"}}
+              style={{ marginBottom: "1rem", cursor: "pointer" }}
             />
           </LinkScroll>
         </Element>

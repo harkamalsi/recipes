@@ -3,13 +3,62 @@ import LazyLoad from "react-lazy-load";
 import { Link } from "react-router-dom";
 import Favorite from "./Favorite";
 
-const Recipes = (props) => {
+class Favorites extends React.Component {
+  state = {
+    favorites: []
+  };
+
+  componentDidMount = () => {
+    const json = localStorage.getItem("recipes");
+    const recipes = JSON.parse(json);
+
+    const favorites = recipes.filter(recipe => recipe.favorite === true);
+
+    this.setState({
+      favorites
+    });
+  };
+
+  altText = () => {
+    return (
+      <h1 
+        className="center"
+        style={{marginTop: "15rem"}}
+        >Please favorite some recipes.</h1>
+    );
+  };
+
+  header = () => {
+    return (
+      <div>
+        <header className="App-header center">
+          <Link
+            to={{
+              pathname: `/`
+            }}
+            style={{ textDecoration: "none" }}
+          >
+            <h1 className="App-title center">Go Home</h1>
+          </Link>{" "}
+        </header>
+      </div>
+    );
+  };
+
+  render() {
+    let favorites = this.state.favorites;
+
+    if (favorites.length === 0) {
+      return <div>{this.header()} {this.altText()}</div>;
+    }
 
     return (
-      <div className="container">
-        <div className="row">
-          {props.recipes !== null &&
-            props.recipes.slice(0, props.count).map(recipe => {
+      <div>
+        {this.header()}
+
+        <div className="container">
+          <div className="row">
+            {favorites.map(recipe => {
               return (
                 <div
                   key={recipe.recipe_id}
@@ -17,6 +66,7 @@ const Recipes = (props) => {
                   style={{ marginBottom: "2rem" }}
                 >
                   <div className="recipes__box">
+                    {console.log(recipe)}
                     <LazyLoad>
                       <div className="image">
                         <img
@@ -46,20 +96,25 @@ const Recipes = (props) => {
                         View Recipe
                       </Link>
                     </button>
+                    {/*
                     <div className="heart">
-                      <Favorite 
-                        allRecipes={props.recipes}
+                      <Favorite
+                        allRecipes={this.props.recipes}
                         recipe={recipe}
-                        setFavorite={props.setFavorite}
+                        setFavorite={this.props.setFavorite}
+                        setIndex={this.props.setIndex}
                       />
                     </div>
+                    */}
                   </div>
                 </div>
               );
             })}
+          </div>
         </div>
       </div>
     );
   }
+}
 
-export default Recipes;
+export default Favorites;
