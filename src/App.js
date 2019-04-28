@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import Form from "./components/Form";
 import Recipes from "./components/Recipes";
+import Loading from './components/loader/Loading';
 import LoadingScreen from "./components/svg/landingLoading";
 import {
   Link as LinkScroll,
@@ -20,6 +21,7 @@ class App extends Component {
   state = {
     recipes: [],
     favRecipe: [],
+    load: false,
     count: 5
   };
 
@@ -125,6 +127,10 @@ class App extends Component {
     });
   };
 
+  setLoader = () => {
+    this.setState({load: !this.state.load});
+  }
+
   render() {
     return (
       <div className="App">
@@ -182,7 +188,7 @@ class App extends Component {
               </div>
             </div>
           </header>{" "}
-          <Form getRecipe={this.getRecipe} />{" "}
+          <Form getRecipe={this.getRecipe} onClick={this.setLoader}/>{" "}
           <div
             className="radioButtons"
             style={{
@@ -223,6 +229,7 @@ class App extends Component {
             />
             30{" "}
           </div>{" "}
+          { this.state.recipes.length === 0 && this.state.load && <Loading />}
           {
             <Recipes
               setFavorite={this.setFavorite}

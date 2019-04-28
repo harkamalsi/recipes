@@ -41,6 +41,9 @@ class Recipe extends React.Component {
               <button className="active-recipe__button">
                 <Link to="/">Go Home</Link>
               </button>
+              <button className="active-recipe__button">
+                <Link to="/favorites">Go to favorites</Link>
+              </button>
             </div>            
           }
         </div>
