@@ -1,4 +1,6 @@
-# Recipe
-Purpose of this app is to learn more about ReactJS and some more advance styling. Recipes are fetched using an api (food2fork.com).
+https://harkamalsi.github.io/recipes/ |
+--------------------------------------|
 
-Check it out here: https://harkamalsi.github.io/recipes/ 
+# Recipe
+During this project I learned ReactJS and some advanced styling. Recipes are fetched using an api (food2fork.com).
+
